@@ -12,5 +12,5 @@ create table tasks (
     description text not null,
     due_date date default null,
     project_id bigint references projects(id) default null,
-    collaborators text default array[]::varchar[] not null 
+    collaborators text array default array[]::varchar[] not null
 );
