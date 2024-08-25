@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 import { projectsQuery, type Projects } from '@/uitls/supaQueries';
 import { columns } from '@/uitls/tableColumns/projectsColumns';
 
@@ -19,11 +18,5 @@ const getProjects = async () => {
 await getProjects();
 </script>
 <template>
-  <DataTable v-if="projects" :columns="columns" :data="projects">
-    <template #cell-name="{ cell }">
-      <RouterLink :to="`/projects/${cell.row.original.slug}`">
-        {{ cell.getValue() }}
-      </RouterLink>
-    </template>
-  </DataTable>
+  <DataTable v-if="projects" :columns="columns" :data="projects" />
 </template>

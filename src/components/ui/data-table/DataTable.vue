@@ -40,11 +40,11 @@ const table = useVueTable({
             :data-state="row.getIsSelected() ? 'selected' : undefined"
           >
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-              <slot :name="`cell-${cell.column.id}`" :cell="cell">
+              <!-- <slot :name="`cell-${cell.column.id}`" :cell="cell">
                 {{ cell.getValue() }}
-              </slot>
+              </slot> -->
               <!-- {{ cell.getValue() }} -->
-              <!-- <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" /> -->
+              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
             </TableCell>
           </TableRow>
         </template>
