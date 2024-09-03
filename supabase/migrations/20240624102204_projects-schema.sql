@@ -14,6 +14,6 @@ create table projects (
     name text not null,
     slug text unique not null,
     description text, 
-    status current_status default 'in-progress' not null,
-    collaborators text default array[]::varchar[] not null 
+    status current_status default 'in-progress' not null,   
+    collaborators text array default array[]::varchar[] not null
 );
