@@ -1,4 +1,6 @@
 <script setup lang="ts">
+
+
 const links = [
   {
     title: 'Home',
@@ -24,13 +26,16 @@ const accountLinks = [
     icon: 'lucide:user',
   },
   {
+    title: 'Chat',
+    icon: 'lucide:message-circle',
+  },
+  {
     title: 'Settings',
     to: '/settings',
     icon: 'lucide:cog',
   },
   {
     title: 'Sign out',
-    to: '/signout',
     icon: 'lucide:log-out',
   },
 ];
