@@ -3,21 +3,23 @@ import { login } from '@/uitls/supaAuth';
 
 
 
- const formData = ref({
-   email: '',
-   password: '',
- })
+const formData = ref({
+  email: '',
+  password: ''
+})
 
- const router = useRouter();
+const { serverError, handleServerError} = useFormErrors()
 
- const signin = async () => {
-  
-   const isLoggedIn = await login(formData.value);
+const router = useRouter()
 
-   if (isLoggedIn) router.push('/');
-  
-  }
+const signin = async () => {
+  const { error } = await login(formData.value)
+  if (!error) return router.push('/')
 
+  handleServerError(error)
+
+
+}
 </script>
 
 <template>
@@ -36,15 +38,20 @@ import { login } from '@/uitls/supaAuth';
         <form class="grid gap-4" @submit.prevent="signin">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
-            <Input type="email" placeholder="johndoe19@example.com" required v-model="formData.email" />
+            <Input type="email" placeholder="johndoe19@example.com" required v-model="formData.email" :class="{ 'border-red-500': serverError }" />
           </div>
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label id="password">Password</Label>
               <a href="#" class="inline-block ml-auto text-xs underline"> Forgot your password? </a>
             </div>
-            <Input id="password" type="password" autocomplete required v-model="formData.password" />
+            <Input id="password" type="password" autocomplete required v-model="formData.password"  :class="{ 'border-red-500': serverError }" />
           </div>
+          <ul v-if="serverError" class="text-sm text-left text-red-500">
+            <li class="list-dic">
+              {{ serverError }}
+            </li>
+          </ul>
           <Button type="submit" class="w-full"> Login </Button>
         </form>
         <div class="mt-4 text-sm text-center">
