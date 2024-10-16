@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { login } from '@/uitls/supaAuth';
+import { watchDebounced } from '@vueuse/core';
+import {  } from '@vueuse/core';
 
 
 
@@ -8,9 +10,13 @@ const formData = ref({
   password: ''
 })
 
-const { serverError, handleServerError} = useFormErrors()
+const { serverError, handleServerError, realtimeErrors, handleLoginForm } = useFormErrors()
 
 const router = useRouter()
+
+watchDebounced(formData, () => {
+  handleLoginForm(formData.value)
+}, { debounce: 1000, deep: true })  
 
 const signin = async () => {
   const { error } = await login(formData.value)
@@ -38,14 +44,25 @@ const signin = async () => {
         <form class="grid gap-4" @submit.prevent="signin">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
-            <Input type="email" placeholder="johndoe19@example.com" required v-model="formData.email" :class="{ 'border-red-500': serverError }" />
+            <Input type="email" placeholder="johndoe19@example.com"  v-model="formData.email" :class="{ 'border-red-500': serverError }"/>
+            <ul v-if="realtimeErrors?.email.length" class="text-sm text-left text-red-500">
+              <li v-for="error in realtimeErrors.email" :key="error" class="list-dic">
+                {{ error }}
+              </li>
+            </ul>
           </div>
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label id="password">Password</Label>
               <a href="#" class="inline-block ml-auto text-xs underline"> Forgot your password? </a>
+            
             </div>
-            <Input id="password" type="password" autocomplete required v-model="formData.password"  :class="{ 'border-red-500': serverError }" />
+            <Input id="password" type="password" autocomplete  v-model="formData.password"  :class="{ 'border-red-500': serverError }" />
+            <ul v-if="realtimeErrors?.password.length" class="text-sm text-left text-red-500">
+              <li v-for="error in realtimeErrors.password" :key="error" class="list-dic">
+                {{ error }}
+              </li>
+            </ul>
           </div>
           <ul v-if="serverError" class="text-sm text-left text-red-500">
             <li class="list-dic">
