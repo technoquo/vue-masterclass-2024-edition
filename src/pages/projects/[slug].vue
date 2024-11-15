@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { projectQuery } from '@/uitls/supaQueries';
-import { type Project } from '@/uitls/supaQueries';
-const route = useRoute('/projects/[slug]');
+const { slug } = useRoute('/projects/[slug]').params;
 
-const project = ref<Project | null>(null);
+const projectsLoader = useProjectsStore();
+const { project } = storeToRefs(projectsLoader);
+const { getProject } = projectsLoader;
 
 watch(
   () => project.value?.name,
@@ -12,15 +12,7 @@ watch(
   },
 );
 
-const getProject = async () => {
-  const { data, error, status } = await projectQuery(route.params.slug as string);
-
-  if (error) useErrorStore().setError({ error, customCode: status });
-
-  project.value = data;
-};
-
-await getProject();
+await getProject(slug as string);
 </script>
 
 <template>
