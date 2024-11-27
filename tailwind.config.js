@@ -1,8 +1,7 @@
- 
 const animate = require('tailwindcss-animate');
 
 /** @type {import('tailwindcss').Config} */
- 
+
 module.exports = {
   darkMode: ['class'],
   safelist: ['dark'],
@@ -13,6 +12,7 @@ module.exports = {
     './components/**/*.{ts,tsx,vue}',
     './app/**/*.{ts,tsx,vue}',
     './src/**/*.{ts,tsx,vue}',
+    './formkit.theme.ts',
   ],
 
   theme: {

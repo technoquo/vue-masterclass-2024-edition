@@ -1,6 +1,4 @@
 <script setup lang="ts">
-
-
 const links = [
   {
     title: 'Home',
@@ -41,14 +39,16 @@ const accountLinks = [
 ];
 
 const router = useRouter();
-const executeAction = async(linkTitle: string) => {
+const executeAction = async (linkTitle: string) => {
   if (linkTitle === 'Sign out') {
-     const { logout } = await import('@/uitls/supaAuth');
-     const isLoggedOut = await logout();
+    const { logout } = await import('@/uitls/supaAuth');
+    const isLoggedOut = await logout();
 
-     if (isLoggedOut) router.push('/login');
+    if (isLoggedOut) router.push('/login');
   }
-}
+};
+
+defineEmits(['taskClicked']);
 </script>
 <template>
   <aside
@@ -59,9 +59,17 @@ const executeAction = async(linkTitle: string) => {
         <iconify-icon icon="lucide:menu"></iconify-icon>
       </Button>
 
-      <Button variant="outline" size="icon" class="w-8 h-8">
-        <iconify-icon icon="lucide:plus"></iconify-icon>
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button variant="outline" size="icon" class="w-8 h-8">
+            <iconify-icon icon="lucide:plus"></iconify-icon>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem @click="$emit('taskClicked')"> Task </DropdownMenuItem>
+          <DropdownMenuItem> Project </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
 
     <nav class="flex flex-col gap-2 justify-between h-full relative">

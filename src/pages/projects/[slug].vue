@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AppInPlaceEditTextArea from '@/components/AppInPlaceEdit/AppInPlaceEditTextArea.vue';
+
 const { slug } = useRoute('/projects/[slug]').params;
 
 const projectsLoader = useProjectsStore();
@@ -11,6 +13,12 @@ watch(
     usePageStore().pageData.title = `Project: ${project.value?.name || ''}`;
   },
 );
+
+const { getProfilesByIds } = useCollabs();
+
+const collabs = project.value?.collaborators
+  ? await getProfilesByIds(project.value.collaborators)
+  : [];
 
 await getProject(slug as string);
 </script>
@@ -26,7 +34,7 @@ await getProject(slug as string);
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        <AppInPlaceEditText v-model="project.description" @commit="updateProject" />
+        <AppInPlaceEditTextArea v-model="project.description" @commit="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
@@ -41,11 +49,14 @@ await getProject(slug as string);
         <div class="flex">
           <Avatar
             class="-mr-4 border border-primary hover:scale-110 transition-transform"
-            v-for="collab in project.collaborators"
-            :key="collab"
+            v-for="collab in collabs"
+            :key="collab.id"
           >
-            <RouterLink class="w-full h-full flex items-center justify-center" to="">
-              <AvatarImage src="" alt="" />
+            <RouterLink
+              class="w-full h-full flex items-center justify-center"
+              :to="{ name: '/users/[username]', params: { username: collab.username } }"
+            >
+              <AvatarImage :src="collab.avatar_url || 'https://github.com/radix-vue.png'" alt="" />
               <AvatarFallback> </AvatarFallback>
             </RouterLink>
           </Avatar>
@@ -68,9 +79,18 @@ await getProject(slug as string);
           </TableHeader>
           <TableBody>
             <TableRow v-for="task in project.tasks" :key="task.id">
-              <TableCell> Lorem ipsum dolor sit amet. </TableCell>
-              <TableCell> In progress </TableCell>
-              <TableCell> 22/08/2024 </TableCell>
+              <TableCell class="p-0">
+                <RouterLink
+                  class="text-left block hover:bg-muted p-4"
+                  :to="{ name: '/tasks/[id]', params: { id: task.id } }"
+                >
+                  {{ task.name }}
+                </RouterLink>
+              </TableCell>
+              <TableCell>
+                <AppInPlaceEditStatus readonly :modelValue="task.status" />
+              </TableCell>
+              <TableCell> {{ task.due_date }} </TableCell>
             </TableRow>
           </TableBody>
         </Table>
