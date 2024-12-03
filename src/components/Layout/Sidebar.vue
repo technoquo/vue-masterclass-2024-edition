@@ -1,9 +1,11 @@
 <script setup lang="ts">
+const { profile } = storeToRefs(useAuthStore());
+
 const links = [
   {
-    title: 'Home',
+    title: 'Dashboard',
     to: '/',
-    icon: 'lucide:home',
+    icon: 'lucide:house',
   },
   {
     title: 'Projects',
@@ -17,30 +19,24 @@ const links = [
   },
 ];
 
-const accountLinks = [
-  {
-    title: 'Profile',
-    to: '/profile',
-    icon: 'lucide:user',
-  },
-  {
-    title: 'Chat',
-    icon: 'lucide:message-circle',
-  },
-  {
-    title: 'Settings',
-    to: '/settings',
-    icon: 'lucide:cog',
-  },
-  {
-    title: 'Sign out',
-    icon: 'lucide:log-out',
-  },
-];
+const accountLinks = computed(() => {
+  return [
+    {
+      title: 'Profile',
+      to: `/users/${profile.value?.username}`,
+      icon: 'lucide:user',
+    },
+    {
+      title: 'Sign Out',
+      icon: 'lucide:log-out',
+    },
+  ];
+});
 
 const router = useRouter();
+
 const executeAction = async (linkTitle: string) => {
-  if (linkTitle === 'Sign out') {
+  if (linkTitle === 'Sign Out') {
     const { logout } = await import('@/uitls/supaAuth');
     const isLoggedOut = await logout();
 
@@ -50,6 +46,7 @@ const executeAction = async (linkTitle: string) => {
 
 defineEmits(['taskClicked']);
 </script>
+
 <template>
   <aside
     class="flex flex-col h-screen gap-2 border-r fixed bg-muted/40 lg:w-52 w-16 transition-[width]"
