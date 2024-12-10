@@ -16,6 +16,14 @@ getGroupedCollabs(projects.value ?? []);
 const columnsWithCollabs = columns(groupedCollabs);
 
 await getProjects();
+
+useMeta({
+  title: 'Projects | Pulse',
+  description: {
+    name: 'description',
+    content: 'Projects',
+  },
+});
 </script>
 <template>
   <DataTable v-if="projects" :columns="columnsWithCollabs" :data="projects" />
